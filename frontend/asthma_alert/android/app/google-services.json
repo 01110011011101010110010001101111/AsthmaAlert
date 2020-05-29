@@ -1,0 +1,47 @@
+{
+  "project_info": {
+    "project_number": "679834207913",
+    "firebase_url": "https://asthmaalert-cda7f.firebaseio.com",
+    "project_id": "asthmaalert-cda7f",
+    "storage_bucket": "asthmaalert-cda7f.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:679834207913:android:e370fde212d1c52e6e8bb8",
+        "android_client_info": {
+          "package_name": "com.asthmaalert"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "679834207913-iipa13k6i41ib1pie9of8t2glg53kfnq.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCMswDBFhlf17Dx6keeIuIVSTBljnEbCSY"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "679834207913-iipa13k6i41ib1pie9of8t2glg53kfnq.apps.googleusercontent.com",
+              "client_type": 3
+            },
+            {
+              "client_id": "679834207913-d9upk41b5q1mvlg7ji0gg84objtfadh2.apps.googleusercontent.com",
+              "client_type": 2,
+              "ios_info": {
+                "bundle_id": "com.asthmaalert"
+              }
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

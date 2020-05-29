@@ -1,0 +1,38 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>CLIENT_ID</key>
+	<string>425443577684-4ntnisafauqnpqj33587ofepj49n02oo.apps.googleusercontent.com</string>
+	<key>REVERSED_CLIENT_ID</key>
+	<string>com.googleusercontent.apps.425443577684-4ntnisafauqnpqj33587ofepj49n02oo</string>
+	<key>ANDROID_CLIENT_ID</key>
+	<string>425443577684-862fd5v31rkmmahvd3aaj7i3kv5gf2a0.apps.googleusercontent.com</string>
+	<key>API_KEY</key>
+	<string>AIzaSyCdYgQuDWidGDKIe15PeNNkvC1zc56ihxw</string>
+	<key>GCM_SENDER_ID</key>
+	<string>425443577684</string>
+	<key>PLIST_VERSION</key>
+	<string>1</string>
+	<key>BUNDLE_ID</key>
+	<string>com.rentafilmer</string>
+	<key>PROJECT_ID</key>
+	<string>rent-a-filmer</string>
+	<key>STORAGE_BUCKET</key>
+	<string>rent-a-filmer.appspot.com</string>
+	<key>IS_ADS_ENABLED</key>
+	<false></false>
+	<key>IS_ANALYTICS_ENABLED</key>
+	<false></false>
+	<key>IS_APPINVITE_ENABLED</key>
+	<true></true>
+	<key>IS_GCM_ENABLED</key>
+	<true></true>
+	<key>IS_SIGNIN_ENABLED</key>
+	<true></true>
+	<key>GOOGLE_APP_ID</key>
+	<string>1:425443577684:ios:f760454fe84484793c02c1</string>
+	<key>DATABASE_URL</key>
+	<string>https://rent-a-filmer.firebaseio.com</string>
+</dict>
+</plist>

@@ -88,7 +88,7 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
           controller: _tabController,
           children: <Widget>[
             DataAnalysis(user: widget.user,),
-            AlertPage(),
+            AlertPage(user: widget.user,),
             Profile(user:widget.user),
           ],
         ),

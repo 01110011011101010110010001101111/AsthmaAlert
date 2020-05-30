@@ -5,6 +5,8 @@ import 'package:asthmaalert/pages/home.dart';
 import 'package:asthmaalert/widgets/custom_buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:asthmaalert/pages/login.dart';
+import 'package:http/http.dart' as http;
+import 'dart:convert';
 
 class Registration extends StatefulWidget {
   @override
@@ -16,15 +18,23 @@ class _RegistrationState extends State<Registration> {
   String password;
   String username;
   String emergencyContact;
-  Map<String, bool> factors = {'humidity': false, 'altitude': false, 'airQual': false, 'temp': false, 'pollen': false};
+  Map<String, bool> factors = {'humidity': false, 'elevation': false, 'aq': false, 'temp': false, 'pollen': false};
   bool idk = false;
 
   final Firestore _firestore = Firestore.instance;
 
   final FirebaseAuth _auth = FirebaseAuth.instance;
 
-
   Future<void> registerUser() async{
+
+    String new_str = '';
+    factors.forEach((key, value) {
+      if (value && key != 'pollen') {
+        new_str += key + ',';
+      }
+      new_str = new_str.substring(0, new_str.length - 1);
+    });
+
     AuthResult user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     FirebaseUser _user = await _auth.currentUser();
     await _firestore.collection('users').document(_user.uid).setData({
@@ -34,6 +44,11 @@ class _RegistrationState extends State<Registration> {
       'uid' : _user.uid,
       'factors': factors
     });
+
+    print(new_str);
+
+    var response = await http.get('https://asthmaalert.herokuapp.com/newUser?user=$email&triggers=$new_str');
+    print(response.body);
 
     FirebaseUser temp = await getUser();
     Navigator.pop(context);
@@ -67,7 +82,9 @@ class _RegistrationState extends State<Registration> {
           },
         ),
       ),
-      body: Container(
+      body: SingleChildScrollView(
+          child: Container(
+
         padding: EdgeInsets.all(16),
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -162,10 +179,10 @@ class _RegistrationState extends State<Registration> {
                 Row(
                   children: <Widget>[
                     Checkbox(
-                      value: factors['altitude'],
+                      value: factors['elevation'],
                       onChanged: (bool value) {
                         setState(() {
-                          factors['altitude'] = value;
+                          factors['elevation'] = value;
                         });
                       },
                     ),
@@ -178,10 +195,10 @@ class _RegistrationState extends State<Registration> {
                 Row(
                   children: <Widget>[
                     Checkbox(
-                      value: factors['airQual'],
+                      value: factors['aq'],
                       onChanged: (bool value) {
                         setState(() {
-                          factors['airQual'] = value;
+                          factors['aq'] = value;
                         });
                       },
                     ),
@@ -248,8 +265,8 @@ class _RegistrationState extends State<Registration> {
                 if (idk){
                   setState(() {
                     factors['pollen'] = true;
-                    factors['altitude'] = true;
-                    factors['airQual'] = true;
+                    factors['elevation'] = true;
+                    factors['aq'] = true;
                     factors['humidity'] = true;
                     factors['temp'] = true;
                   });
@@ -262,7 +279,8 @@ class _RegistrationState extends State<Registration> {
             )
           ],
         ),
-      ),
+      )
+    )
     );
   }
 }

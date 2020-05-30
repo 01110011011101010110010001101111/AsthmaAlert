@@ -27,6 +27,9 @@ dependencies:
   cloud_firestore:
   firebase_core:
   firebase_auth:
+  url_launcher:
+  flutter_local_notifications:
+  geolocator:
   http:
 
 dev_dependencies:

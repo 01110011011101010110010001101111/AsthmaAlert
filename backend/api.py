@@ -4,6 +4,7 @@ from retrieve_parameters import pollen_level, humidity_level, elevation_level, a
 import pickle
 from flask_pymongo import PyMongo
 from alert_algorithm import alert
+from predictions import makeHistogram, mostLikely
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -120,5 +121,27 @@ def addAttack():
     x["past_attacks"].append(param)
     x = {"$set": x}
     db.update_one(db.find_one_or_404({"email": EMAIL}), x)
+
+@app.route("/histogram")
+def makeHistogram():
+    global EMAIL
+    if 'user' in request.args:
+        EMAIL = (request.args['user'])
+    else:
+        return "No Email Provided. Please Provide an Email"
+    if 'data' in request.args:
+        trig = (request.args['data'])
+    return makeHistogram(trig)
+
+@app.route('/possibleNewTriggers')
+def makeHistogram():
+    global EMAIL
+    if 'user' in request.args:
+        EMAIL = (request.args['user'])
+    else:
+        return "No Email Provided. Please Provide an Email"
+    if 'data' in request.args:
+        trig = (request.args['data'])
+    return mostLikely(trig)
 
 app.run()

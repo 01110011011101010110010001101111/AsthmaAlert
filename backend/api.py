@@ -1,9 +1,19 @@
 import flask
 from flask import request, jsonify
 from retrieve_parameters import pollen_level, humidity_level, elevation_level, airquality, temperature
+from flask_pymongo import PyMongo
+
+
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
+
+KEY = "mongodb+srv://dbUser:jCx!zG3X6HzqsT*@asthmaalert-q46ku.mongodb.net/test?retryWrites=true&w=majority"
+
+app.config["MONGO_URI"] = KEY
+client = PyMongo(app)
+db = client.db.users
+EMAIL = ""
 
 # Create some test data for our catalog in the form of a list of dictionaries.
 books = [
@@ -72,5 +82,45 @@ def api_id():
     # results = []
 
     # return jsonify(results)
+
+
+'''
+Adds a user: user and triggers
+'''
+
+
+@app.route("/data/newUser", methods=["POST"])
+def createUser():
+    global EMAIL
+    if 'user' in request.args:
+        EMAIL = (request.args['user'])
+    else:
+        return "No Email Provided. Please Provide an Email"
+    if 'triggers' in request.args:
+        trig = (request.args['triggers'])
+    else:
+        return "No Triggers Provided. Please Provide a Trigger"
+    user = {"email": EMAIL, "triggers": trig, "past_attacks": []}
+    db.insert_one(user)
+
+
+'''
+Adds new trigger data given input
+'''
+
+
+@app.route("/data/newAttack", methods=["POST"])
+def addAttack():
+    global EMAIL
+    if 'triggers' in request.args:
+        trig = request.args['triggers']
+    else:
+        return "No Triggers Provided. Please Provide a Trigger"
+    x = db.find_one_or_404({"email": EMAIL})
+    x["past_attacks"].append(trig)
+    x = {"$set": x}
+    db.update_one(db.find_one_or_404({"email": EMAIL}), x)
+
+
 
 app.run()

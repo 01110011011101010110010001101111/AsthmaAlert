@@ -3,6 +3,7 @@ import random
 import matplotlib.pyplot as plt
 import numpy as np
 from io import BytesIO
+import base64
 
 
 # data = [{"Thing1": random.uniform(0, 1) < 0.5, "Thing2": random.uniform(
@@ -28,7 +29,13 @@ def makeHistogram(data):
     plt.bar(label_array, val_array)
     figdata = BytesIO()
     fig.savefig(figdata, format='png')
-    return figdata
+    # plt.savefig(pic_IObytes,  format='png')
+    # pic_IObytes.seek(0)
+    # pic_hash = base64.b64encode(pic_IObytes.read())
+
+    return base64.b64encode(figdata)
+    # return base64.b64encode(buf.getvalue()).decode('utf-8').replace('\n', '')
+    # buf.close()
 
 # makeHistogram(data)
 

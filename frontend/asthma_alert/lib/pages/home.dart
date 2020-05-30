@@ -37,18 +37,47 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        leading: Container(),
+        backgroundColor: Colors.white,
+        title: Hero(
+          tag: 'Title',
+          child: Image(
+            image: AssetImage('assets/images/asthmaalert.png')
+          ),
+        ),
         actions: <Widget>[
           IconButton(
-            icon: Icon(Icons.settings),
+            icon: Icon(Icons.settings, color: Colors.black,),
             onPressed: (){
-              _auth.signOut();
-              Navigator.pop(context);
-              Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                      builder: (BuildContext context) => Login()
-                  )
+
+
+              showDialog(context: context,
+                  barrierDismissible: true,
+                  builder: (BuildContext context) {
+                    return AlertDialog(
+                      title: Text('Are you sure you want to log out?'),
+                      actions: <Widget>[
+                        IconButton(
+                          onPressed: (){
+                            Navigator.pop(context);
+                          },
+                          icon: Icon(Icons.not_interested),
+                        ),
+                        IconButton(
+                          icon: Icon(Icons.exit_to_app),
+                          onPressed: (){
+                            _auth.signOut();
+                            Navigator.pop(context);
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                    builder: (BuildContext context) => Login()
+                                )
+                            );
+                            },
+                        )
+                      ],
+                    );
+                  }
               );
             },
           )
@@ -71,27 +100,29 @@ class _HomeState extends State<Home> with SingleTickerProviderStateMixin{
           unselectedLabelColor: Colors.black38,
           tabs: <Widget>[
             Tab(
-              icon: Icon(Icons.message, color: Colors.white,),
+              icon: Icon(Icons.poll, color: Colors.black,),
               child: Text(
-                'Messages', style: TextStyle(
-                  color: Colors.white
+                'Data Analysis',
+                style: TextStyle(
+                  color: Colors.black
+                ),
+              ),
+            ),
+            Tab(
+              icon: Icon(Icons.volume_up, color:  Colors.black,),
+              child: Text(
+                'Alert', style: TextStyle(
+                color: Colors.black
               ),
               ),
             ),
             Tab(
-              icon: Icon(Icons.near_me, color: Colors.white,),
+              icon: Icon(Icons.person, color: Colors.black,),
               child: Text(
-                'Connect', style: TextStyle(
-                  color: Colors.white
-              ),
-              ),
-            ),
-            Tab(
-              icon: Icon(Icons.person, color: Colors.white),
-              child: Text(
-                'Profile', style: TextStyle(
-                  color: Colors.white
-              ),
+                'Profile',
+                style: TextStyle(
+                  color: Colors.black
+                ),
               ),
             ),
           ],

@@ -56,9 +56,10 @@ class _LoginState extends State<Login> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image(
-              image: AssetImage(
-                'assets/images/asthmaalert.png'
+            Hero(
+              tag: 'Title',
+              child: Image(
+                  image: AssetImage('assets/images/asthmaalert.png')
               ),
             ),
             TextField(

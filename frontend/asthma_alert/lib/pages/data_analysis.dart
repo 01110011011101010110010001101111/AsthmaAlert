@@ -14,6 +14,8 @@ class DataAnalysis extends StatefulWidget {
 class _DataAnalysisState extends State<DataAnalysis> {
   @override
   Widget build(BuildContext context) {
-    return Container();
+    return Scaffold(
+
+    );
   }
 }

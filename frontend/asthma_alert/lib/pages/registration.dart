@@ -1,10 +1,10 @@
-import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:asthmaalert/pages/home.dart';
 import 'package:asthmaalert/widgets/custom_buttons.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
+import 'package:asthmaalert/pages/login.dart';
 
 class Registration extends StatefulWidget {
   @override
@@ -15,6 +15,9 @@ class _RegistrationState extends State<Registration> {
   String email;
   String password;
   String username;
+  String emergencyContact;
+  Map<String, bool> factors = {'humidity': false, 'altitude': false, 'airQual': false, 'temp': false, 'pollen': false};
+  bool idk = false;
 
   final Firestore _firestore = Firestore.instance;
 
@@ -24,10 +27,12 @@ class _RegistrationState extends State<Registration> {
   Future<void> registerUser() async{
     AuthResult user = await _auth.createUserWithEmailAndPassword(email: email, password: password);
     FirebaseUser _user = await _auth.currentUser();
-    await _firestore.collection('users').document(username).setData({
+    await _firestore.collection('users').document(_user.uid).setData({
       'username': username,
       'email' : email,
+      'emergency': emergencyContact,
       'uid' : _user.uid,
+      'factors': factors
     });
 
     FirebaseUser temp = await getUser();
@@ -49,6 +54,18 @@ class _RegistrationState extends State<Registration> {
 
       appBar: AppBar(
         title: Text('Register'),
+        leading: IconButton(
+          icon: Icon(Icons.arrow_back_ios),
+          onPressed: (){
+            Navigator.pop(context);
+            Navigator.push(
+              context,
+              MaterialPageRoute(
+                builder: (BuildContext context) => Login()
+              )
+            );
+          },
+        ),
       ),
       body: Container(
         padding: EdgeInsets.all(16),
@@ -56,11 +73,13 @@ class _RegistrationState extends State<Registration> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            Image(
-              image: AssetImage(
-                  'assets/images/asthmaalert.png'
+            Hero(
+              tag: 'Title',
+              child: Image(
+                  image: AssetImage('assets/images/asthmaalert.png')
               ),
             ),
+
             TextField(
                 onChanged: (value) => username = value,
                 decoration: InputDecoration(
@@ -103,11 +122,143 @@ class _RegistrationState extends State<Registration> {
             SizedBox(
               height: 15,
             ),
+            TextField(
+                onChanged: (value) => emergencyContact = value,
+                decoration: InputDecoration(
+                  icon: Icon(Icons.contact_phone),
+                  border: OutlineInputBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(3))
+                  ),
+                  hintText: 'Enter Your Emergency Contact Number',
+                )
+            ),
+            SizedBox(
+              height: 15,
+            ),
+            Divider(thickness: 5,),
+            Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                Text('What commonly triggers your asthma attacks?', style: TextStyle(
+                  fontSize: 15,
+                  fontWeight: FontWeight.bold
+                ),),
+                Row(
+                  children: <Widget>[
+                    Checkbox(
+                      value: factors['humidity'],
+                      onChanged: (bool value) {
+                        setState(() {
+                          factors['humidity'] = value;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Humidity')
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Checkbox(
+                      value: factors['altitude'],
+                      onChanged: (bool value) {
+                        setState(() {
+                          factors['altitude'] = value;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Altitude')
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Checkbox(
+                      value: factors['airQual'],
+                      onChanged: (bool value) {
+                        setState(() {
+                          factors['airQual'] = value;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Air Quality')
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Checkbox(
+                      value: factors['temp'],
+                      onChanged: (bool value) {
+                        setState(() {
+                          factors['temp'] = value;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Temperature')
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Checkbox(
+                      value: factors['pollen'],
+                      onChanged: (bool value) {
+                        setState(() {
+                          factors['pollen'] = value;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text('Pollen')
+                  ],
+                ),
+                Row(
+                  children: <Widget>[
+                    Checkbox(
+                      value: idk,
+                      onChanged: (bool value) {
+                        setState(() {
+                          idk = value;
+                        });
+                      },
+                    ),
+                    SizedBox(
+                      width: 10,
+                    ),
+                    Text("I don't know")
+                  ],
+                )
+              ],
+            ),
+
             CustomButton(
               text: 'Register',
               callback: () async {
+                if (idk){
+                  setState(() {
+                    factors['pollen'] = true;
+                    factors['altitude'] = true;
+                    factors['airQual'] = true;
+                    factors['humidity'] = true;
+                    factors['temp'] = true;
+                  });
+                }
                 await registerUser();
               },
+            ),
+            SizedBox(
+              height: 10,
             )
           ],
         ),

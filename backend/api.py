@@ -18,7 +18,7 @@ EMAIL = ""
 
 @app.route('/', methods=['GET'])
 def home():
-    return '''<h1>Welcome to the Asthma Alert Backend</h1>'''
+    return "<h1>Welcome to the Asthma Alert Backend</h1>"
 
 @app.route('/alert', methods=['GET'])
 def api_id():

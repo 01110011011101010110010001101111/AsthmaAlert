@@ -52,4 +52,12 @@ def airquality(lat, lon):
         lat, lon, API)
     # print(lat, lon, f.read())
     x = requests.get(test)
-    fin = json.loads(x.text)["data"]["current"]["pollution"]["aqius"]
+    return json.loads(x.text)["data"]["current"]["pollution"]["aqius"]
+
+def temperature(lat, lon):
+    api_key = "3bb8aadaa3f8d3fd4a54f576f1945112"
+    test = "http://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&appid={}".format(lat, lon, api_key)
+    data = requests.get(test)
+    data = data.json()
+    return data["main"]["temp"]
+

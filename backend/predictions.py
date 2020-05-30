@@ -2,6 +2,8 @@ import sklearn
 import random
 import matplotlib.pyplot as plt
 import numpy as np
+from io import BytesIO
+
 
 # data = [{"Thing1": random.uniform(0, 1) < 0.5, "Thing2": random.uniform(
 #     0, 1) < 0.5, "Thing3": random.uniform(0, 1) < 0.5} for i in range(10)]
@@ -22,8 +24,11 @@ def makeHistogram(data):
     val_array = dat
     label_array = ["pollen_level", "humidity_level", "aq", "temp", "elevation"]
     # print(label_array)
+    fig = plt.figure()
     plt.bar(label_array, val_array)
-    plt.show()
+    figdata = BytesIO()
+    fig.savefig(figdata, format='png')
+    return figdata
 
 # makeHistogram(data)
 

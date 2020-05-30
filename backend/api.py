@@ -131,7 +131,8 @@ def makeHistogram():
         return "No Email Provided. Please Provide an Email"
     if 'data' in request.args:
         trig = (request.args['data'])
-    return makeHistogram(trig)
+    x = db.find_one_or_404({"email": EMAIL})
+    return makeHistogram(x["past_attacks"])
 
 @app.route('/possibleNewTriggers')
 def makeHistogram():
@@ -140,8 +141,7 @@ def makeHistogram():
         EMAIL = (request.args['user'])
     else:
         return "No Email Provided. Please Provide an Email"
-    if 'data' in request.args:
-        trig = (request.args['data'])
-    return mostLikely(trig)
+    x = db.find_one_or_404({"email": EMAIL})
+    return mostLikely(x["past_attacks"])
 
 app.run()

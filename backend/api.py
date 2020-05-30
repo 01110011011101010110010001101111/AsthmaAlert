@@ -20,7 +20,7 @@ EMAIL = ""
 def home():
     return '''<h1>Welcome to the Asthma Alert Backend</h1>'''
 
-@app.route('/data/alert', methods=['GET'])
+@app.route('/alert', methods=['GET'])
 def api_id():
     global EMAIL
     # x = db.find_one_or_404({"email": EMAIL})
@@ -121,6 +121,7 @@ def addAttack():
     x["past_attacks"].append(param)
     x = {"$set": x}
     db.update_one(db.find_one_or_404({"email": EMAIL}), x)
+    return "Added data for new attack"
 
 @app.route("/histogram")
 def makeHistogram():
@@ -135,13 +136,18 @@ def makeHistogram():
     return makeHistogram(x["past_attacks"])
 
 @app.route('/possibleNewTriggers')
-def makeHistogram():
+def possibleNewTriggers():
     global EMAIL
     if 'user' in request.args:
         EMAIL = (request.args['user'])
     else:
         return "No Email Provided. Please Provide an Email"
     x = db.find_one_or_404({"email": EMAIL})
-    return mostLikely(x["past_attacks"])
+    if len(x["past_attacks"]) != 0:
+        likely_String = mostLikely(x["past_attacks"])
+        likely_String = likely_String[2:-2]
+        return likely_String
+    else:
+        return "No past attack data available"
 
 app.run()

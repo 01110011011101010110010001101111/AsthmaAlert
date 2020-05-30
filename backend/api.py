@@ -1,9 +1,8 @@
 import flask
 from flask import request, jsonify
 from retrieve_parameters import pollen_level, humidity_level, elevation_level, airquality, temperature
+import pickle
 from flask_pymongo import PyMongo
-
-
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -15,39 +14,20 @@ client = PyMongo(app)
 db = client.db.users
 EMAIL = ""
 
-# Create some test data for our catalog in the form of a list of dictionaries.
-books = [
-    {'id': 0,
-     'title': 'A Fire Upon the Deep',
-     'author': 'Vernor Vinge',
-     'first_sentence': 'The coldsleep itself was dreamless.',
-     'year_published': '1992'},
-    {'id': 1,
-     'title': 'The Ones Who Walk Away From Omelas',
-     'author': 'Ursula K. Le Guin',
-     'first_sentence': 'With a clamor of bells that set the swallows soaring, the Festival of Summer came to the city Omelas, bright-towered by the sea.',
-     'published': '1973'},
-    {'id': 2,
-     'title': 'Dhalgren',
-     'author': 'Samuel R. Delany',
-     'first_sentence': 'to wound the autumnal city.',
-     'published': '1975'}
-]
-
+app.config["MONGO_URI"] = KEY
+client = PyMongo(app)
+db = client.db.users
+EMAIL = ""
 
 @app.route('/', methods=['GET'])
 def home():
     return '''<h1>Welcome to the Asthma Alert Backend</h1>'''
 
-
-@app.route('/data/all', methods=['GET'])
-def api_all():
-    return jsonify(books)
-
-
 @app.route('/data/alert', methods=['GET'])
 def api_id():
     lat = lon = 0
+
+    triggers = ["Pollen"]
 
     if 'lat' in request.args:
         lat = float(request.args['lat'])
@@ -64,24 +44,71 @@ def api_id():
     elevation = elevation_level(lat, lon)
     aq = airquality(lat, lon)
     temp = temperature(lat, lon)
+
+
+    pollen_high_plant = []
+    pollen_high = False
+    pollen_val = 0
+    if pollen != None:
+        for plant in pollen:
+            if pollen[plant] > pollen_val:
+                pollen_val = pollen[plant]
+            if pollen[plant] == 5:
+                pollen_high_plant.append(plant)
+                pollen_high = True
+
+    
+    humidity_high = False
+    if humidity != None:
+        if humidity >= 90:
+            humidity_high = True
+
+    elevation_high = False
+    if elevation != None:
+        if elevation >= 1524:
+            elevation_high = True
+    
+    aq_high = False
+    if aq != None:
+        if aq >= 101:
+            aq_high = True
+
+    temp_high = False
+    if temp != None:
+        if temp <= 260.928 or temp >= 322.039:
+            temp_high = True    
+
+    filename = 'Alert-ML-model.pkl'
+    loaded_model = pickle.load(open(filename, 'rb'))
+    result = loaded_model.predict([[pollen_val,elevation,temp, aq, humidity]])[0] 
+
+    if result == 0:
+        alertStatus = False
+        message = ""
+    elif result == 1:
+        alertStatus = True
+        if pollen_high == True and aq_high == True:
+            message = "Be careful of the high AQI and the high levels of Pollen!"
+        elif pollen_high == True:
+            if len(pollen_high_plant) == 1:
+                message = "Be careful of the high levels of pollen, especially {}!".format(pollen_high_plant[0])
+            elif len(pollen_high_plant) == 2:
+                message = "Be careful of the high levels of pollen, especially {} and {}!".format(pollen_high_plant[0], pollen_high_plant[1])
+            else:
+                string = ""
+                for i in range(len(pollen_high_plant)-1):
+                    string += pollen_high_plant[i] + ", "
+                print(string)
+                message = "Be careful of the high levels of pollen, especially {}and {}!".format(string, pollen_high_plant[-1])
+        elif aq_high == True:
+            message = "Be careful of the high AQI!"
+
     
     results = {
-                  'Pollen': pollen,
-                  'Humidity': humidity,
-                  'Elevation': elevation,
-                  'Air Quality': aq,
-                  'Temperature': temp
+                  'Alert' : alertStatus,
+                  'Message' : message,
               }
     return jsonify(results)
-
-
-    # results = {
-    #               "status":""
-    #           }
-    # results["status"] = "True"
-    # results = []
-
-    # return jsonify(results)
 
 
 '''
@@ -89,7 +116,7 @@ Adds a user: user and triggers
 '''
 
 
-@app.route("/data/newUser", methods=["POST"])
+@app.route("/newUser", methods=["POST"])
 def createUser():
     global EMAIL
     if 'user' in request.args:
@@ -109,7 +136,7 @@ Adds new trigger data given input
 '''
 
 
-@app.route("/data/newAttack", methods=["POST"])
+@app.route("/newAttack", methods=["POST"])
 def addAttack():
     global EMAIL
     if 'triggers' in request.args:
@@ -120,7 +147,6 @@ def addAttack():
     x["past_attacks"].append(trig)
     x = {"$set": x}
     db.update_one(db.find_one_or_404({"email": EMAIL}), x)
-
 
 
 app.run()

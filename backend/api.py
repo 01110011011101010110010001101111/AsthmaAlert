@@ -1,5 +1,6 @@
 import flask
 from flask import request, jsonify
+from retrieve_parameters import pollen_level, humidity_level, elevation_level, airquality, temperature
 
 app = flask.Flask(__name__)
 app.config["DEBUG"] = True
@@ -38,12 +39,6 @@ def api_all():
 def api_id():
     lat = lon = 0
 
-    # Check if data was provided as part of the URL.
-    # if 'id' in request.args:
-    #     id = int(request.args['id'])
-    # else:
-    #     return "Error: No id field provided. Please specify an id."
-
     if 'lat' in request.args:
         lat = float(request.args['lat'])
     else:
@@ -53,14 +48,29 @@ def api_id():
         lon = float(request.args['lon'])
     else:
         return "No longitude field provided. Please specify a longitude."
+
+    pollen = pollen_level(lat, lon)
+    humidity = humidity_level(lat, lon)
+    elevation = elevation_level(lat, lon)
+    aq = airquality(lat, lon)
+    temp = temperature(lat, lon)
     
+    results = {
+                  'Pollen': pollen,
+                  'Humidity': humidity,
+                  'Elevation': elevation,
+                  'Air Quality': aq,
+                  'Temperature': temp
+              }
+    return jsonify(results)
+
+
     # results = {
     #               "status":""
     #           }
     # results["status"] = "True"
-    return ("Latitude = {}, Longitude = {}".format(lat, lon))
     # results = []
 
-    return jsonify(results)
+    # return jsonify(results)
 
 app.run()

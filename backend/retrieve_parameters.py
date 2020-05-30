@@ -2,7 +2,7 @@ import requests
 import json
 
 
-    # Pollen Levels
+# Pollen Levels
 def pollen_level(lat, lon):
     api_key = "5d1aa97559fb4d84a578476bf89a6a20"
     # Number from 1 to 3 that indicates how many days forecast to request
@@ -13,14 +13,12 @@ def pollen_level(lat, lon):
     
     pollen_data = {}
 
-    for plant in data['data'][0]["plants"]:
-        if data['data'][0]["plants"][plant]["data_available"]:
-            pollen_data[data['data'][0]["plants"][plant]["display_name"]] = data['data'][0]["plants"][plant]["index"]["value"]
-        # if plant['data_available'] == True:
-        #     pollen_data[plant] = plant["category"]
-    # for plant in data['data']['plants']:
-    #     print(plant)
-    # return data
+    if data['data'] != None:
+        for plant in data['data'][0]["plants"]:
+            if data['data'][0]["plants"][plant]["data_available"]:
+                pollen_data[data['data'][0]["plants"][plant]["display_name"]] = data['data'][0]["plants"][plant]["index"]["value"]
+    else:
+        return None
     return pollen_data
 
 # print(pollen_level(42.342068, -71.202459))
@@ -36,7 +34,7 @@ def humidity_level(lat, lon):
 
 # print(humidity_level(42.342068, -71.202459))
 
-def altitude(lat, lon):
+def elevation_level(lat, lon):
     api_key = "AIzaSyAAq8Uo2UFgfz4E5zBhg96MR9r3U7bB4HQ"
     link = "https://maps.googleapis.com/maps/api/elevation/json?locations={},{}&key={}".format(lat, lon, api_key)
     data = requests.get(link)

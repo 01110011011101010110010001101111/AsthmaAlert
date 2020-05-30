@@ -59,12 +59,7 @@ def api_id():
     #           }
     # results["status"] = "True"
     return ("Latitude = {}, Longitude = {}".format(lat, lon))
-    # print(id, lat, lon)
     # results = []
-
-    # for book in books:
-    #     if book['id'] == id:
-    #         results.append(book)
 
     return jsonify(results)
 

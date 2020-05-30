@@ -45,3 +45,11 @@ def altitude(lat, lon):
     return elevation
 
 # print(altitude(42.342068, -71.202459))
+
+def airquality(lat, lon):
+    API = "dffe7bb6-e8c3-44ea-a973-c1d2abd163f5"
+    test = "http://api.airvisual.com/v2/nearest_city?lat={}&lon={}&key={}".format(
+        lat, lon, API)
+    # print(lat, lon, f.read())
+    x = requests.get(test)
+    fin = json.loads(x.text)["data"]["current"]["pollution"]["aqius"]

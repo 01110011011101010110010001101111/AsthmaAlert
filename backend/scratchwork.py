@@ -6,11 +6,16 @@ myobj = {'somekey': 'somevalue'}
 
 LATITUDE = 29
 LONGITUDE = -98
+KEY = "H6XyiCT0w1t9GgTjqhRXxDMrVj9h78ya3NuxlwM7XUs"
 
-test = "http://api.airvisual.com/v2/nearest_city?lat={}&lon={}&key={}".format(LATITUDE, LONGITUDE, YOUR_API_KEY)
+test = "http://api.airvisual.com/v2/nearest_city?lat={}&lon={}&key={}".format(LATITUDE, LONGITUDE, KEY)
 
-x = req.get(test)
+test2 = "https://weather.ls.hereapi.com/weather/1.0/report.json?product=observation&latitude={}&longitude={}&oneobservation=true&apiKey={}".format(LATITUDE, LONGITUDE, KEY)
 
-print(json.loads(x.text)["data"]["current"]["pollution"]["aqius"])
+test3 = "http://api.openweathermap.org/data/2.5/weather?lat=35&lon=139&key=f10eb0c33732395b3ae7d8298c240f6a"
+
+x = req.get(test3)
+
+print(json.loads(x.text))
 
 

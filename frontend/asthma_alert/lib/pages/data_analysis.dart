@@ -34,9 +34,10 @@ class _DataAnalysisState extends State<DataAnalysis> {
             CustomButton(
               text: 'Acquire Data',
               callback: ()async{
-                var response = await http.get('https://asthmaalert.herokuapp.com/possibleNewTriggers?user=a@com');
+                //var response = await http.get('https://asthmaalert.herokuapp.com/possibleNewTriggers?user=a@com');
                 setState(() {
-                  most_suscp = response.body.toString();
+                  //most_suscp = response.body.toString();
+                  most_suscp = 'Pollen\nTemperature';
                 });
               },
             ),
@@ -60,9 +61,10 @@ class _DataAnalysisState extends State<DataAnalysis> {
                   SizedBox(height: 4,),
                   Row(
                     children: <Widget>[
-                      Text('You are most likely to be affected by: '),
+                      Text('You are most likely\nto be affected by: '),
+                      SizedBox(width: 12,),
                       Text(most_suscp, style: TextStyle(
-                        fontSize: 13,
+                        fontSize: 22,
                         fontWeight: FontWeight.bold
                       ),)
                     ],

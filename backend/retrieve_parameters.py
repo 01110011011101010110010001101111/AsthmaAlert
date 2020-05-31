@@ -52,6 +52,12 @@ def airquality(lat, lon):
     x = requests.get(test)
     return json.loads(x.text)["data"]["current"]["pollution"]["aqius"]
 
+    # api_key = "4299b0a2-dd62-47dd-8496-00fe29f1ce5d"
+    # link = "https://api.airvisual.com/v2/nearest_city?lat={}&lon={}&key={}".format(lat, lon, api_key)
+    # data = requests.get(link)
+    # data = data.json()
+    # print(data)
+
 def temperature(lat, lon):
     api_key = "3bb8aadaa3f8d3fd4a54f576f1945112"
     test = "http://api.openweathermap.org/data/2.5/weather?lat={}&lon={}&appid={}".format(lat, lon, api_key)
@@ -59,3 +65,4 @@ def temperature(lat, lon):
     data = data.json()
     return data["main"]["temp"]
 
+# print(airquality(42.342068, -71.202459))

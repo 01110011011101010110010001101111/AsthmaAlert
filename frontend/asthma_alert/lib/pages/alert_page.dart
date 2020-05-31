@@ -22,6 +22,7 @@ class AlertPage extends StatefulWidget {
 
 class _AlertPageState extends State<AlertPage> {
   Map<String, dynamic> number;
+  String AlertMessage = 'ALERT!! Be careful of the high pollen levels, especially graminales!\nHold Blue Button to Dismiss.';
 
   FlutterLocalNotificationsPlugin flutterLocalNotificationsPlugin =
   new FlutterLocalNotificationsPlugin();
@@ -101,9 +102,9 @@ class _AlertPageState extends State<AlertPage> {
     var platformChannelSpecifics = NotificationDetails(
         androidPlatformChannelSpecifics, iOSChannelSpecifics);
 
-    await flutterLocalNotificationsPlugin.show(0, 'Hello, buddy',
-        'A message from flutter buddy', platformChannelSpecifics,
-        payload: 'test oayload');
+    await flutterLocalNotificationsPlugin.show(0, 'You Have a New Alert!',
+        'Be careful of the high pollen levels.', platformChannelSpecifics,
+        payload: 'Be careful of the high pollen levels.');
   }
 
   @override
@@ -156,6 +157,7 @@ class _AlertPageState extends State<AlertPage> {
                     Text('Alerts',
                       style: TextStyle(
                         fontWeight: FontWeight.bold,
+                        color: Colors.red,
                         fontSize: 20
                       ),
                     ),
@@ -176,20 +178,19 @@ class _AlertPageState extends State<AlertPage> {
                           );
                         }
                         return  Column(children: <Widget>[
-                        Text('${snapshot.data[0].toString()}',
+                        Text('${snapshot.data.toString()}',
                               style: TextStyle(
                               fontSize: 12,
                               fontWeight: FontWeight.bold,
                               color: Colors.black
                             )
                           ),
-                          SizedBox(
-                            height: 5,
-                          ),
-                          Text('${snapshot.data[1].toString()}',
+                         Divider(thickness: 3,),
+                         // Text('${snapshot.data[1].toString()}',
+                          Text(AlertMessage,
                           textAlign: TextAlign.center,
                           style: TextStyle(
-                            fontSize: 18,
+                            fontSize: 12,
                             fontWeight: FontWeight.bold,
                             color: Colors.black
                           ),)
@@ -237,7 +238,7 @@ class _AlertPageState extends State<AlertPage> {
                                     color: Colors.redAccent,
                                     elevation: 12,
                                     onPressed: () async{
-                                      var response = await http.get('https://asthmaalert.herokuapp.com/newAttack?user=a@com&lat=48.764&lon=72.23');
+                                      // var response = await http.get('https://asthmaalert.herokuapp.com/newAttack?user=a@com&lat=48.764&lon=72.23');
                                       launch("tel://${number['emergency']}");
                                       Navigator.pop(context);
                                     },
@@ -267,9 +268,16 @@ class _AlertPageState extends State<AlertPage> {
                   ),
                   color: Colors.blue,
                   textColor: Colors.white,
-                  onPressed: () async {
+                  onPressed: ()async {
                     var response = await http.get('https://asthmaalert.herokuapp.com/newAttack?user=a@com&lat=48.764&lon=72.23');
+
                     _showNotification();
+                  },
+                  onLongPress: ()  {
+                 //   var response = await http.get('https://asthmaalert.herokuapp.com/newAttack?user=a@com&lat=48.764&lon=72.23');
+                    setState(() {
+                      AlertMessage = 'Alert Cleared! Data Recorded.';
+                    });
                   },
                 ),
               ),

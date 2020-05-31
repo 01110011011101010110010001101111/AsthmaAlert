@@ -8,23 +8,23 @@ import 'package:geolocator/geolocator.dart';
 class LocationServer {
 
   // ignore: close_sinks
-  final _locationController = StreamController<List>();
+  final _locationController = StreamController<String>();
 
 
-  Stream<List> get stream => _locationController.stream;
+  Stream<String> get stream => _locationController.stream;
 
 
   LocationServer(String email){
-    Timer.periodic(Duration(seconds: 3), (t) async {
+    Timer.periodic(Duration(seconds: 1), (t) async {
       // add the http status code = 200
       Position position = await Geolocator().getCurrentPosition(desiredAccuracy: LocationAccuracy.high);
-      String lat1 = position.latitude.toString().substring(0,5);
+      String lat1 = position.latitude.toString().substring(0,);
       String long1 = position.longitude.toString().substring(0,5);
     //  var response = await http.get('https://asthmaalert.herokuapp.com/alert?user=$email&lat=$lat1&lon=$long1');
-      var response = await http.get('https://asthmaalert.herokuapp.com/alert?user=a@com&lat=42.336509&lon=-71.202483');
-      String new_txt = buildResponse(response.body.toString());
+    //  var response = await http.get('https://asthmaalert.herokuapp.com/alert?user=a@com&lat=42.336509&lon=-71.202483');
+     // String new_txt = buildResponse(response.body.toString());
 
-      _locationController.add(['Latitude: $lat1, Longitutde: $long1', new_txt]);
+      _locationController.add('Latitude: ${position.latitude}\nLongitutde: ${position.longitude}');
     });
 
   }

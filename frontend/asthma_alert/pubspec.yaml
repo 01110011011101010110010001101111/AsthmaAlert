@@ -30,7 +30,7 @@ dependencies:
   url_launcher:
   flutter_local_notifications:
   geolocator:
-  http:
+  http: any
 
 dev_dependencies:
   flutter_test:
